@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --primary-dark: #317471; /* Main Teal/Forest Green */
+  --secondary-dark: #006666; /* Darker Footer Teal */
+  --light-accent: #e9f0ef; /* Light Card/Input Background */
+  --bg: #fff;
+}
+
+.contactPage {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* Banner/Hero */
+.bannerSection {
+  background: #fff;
+  padding: 124px 0 30px 100px;
+  text-align: left;
+}
+.bannerTitle {
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+  letter-spacing: 1px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Info Cards Section */
+.infoSection {
+  background: #e8e9eb;
+  padding: 10px 20px 60px 20px;
+  text-align: center;
+}
+.infoHeader {
+  font-size: 42px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  margin-bottom: 60px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.9s ease forwards;
+}
+.cardsGrid {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.infoCard {
+  background: var(--light-accent);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(44, 14, 79, 0.08);
+  padding: 44px 32px;
+  min-width: 280px;
+  max-width: 360px;
+  flex: 1 1 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 320px;
+  margin-bottom: 16px;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease forwards;
+}
+
+.infoCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(44, 14, 79, 0.12);
+}
+
+.cardIconWrapper {
+  background: #f0f7f6;
+  border-radius: 50%;
+  padding: 22px;
+  margin-bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-dark);
+  font-size: 36px;
+  transition: background 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+.infoCard:hover .cardIconWrapper {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.cardContent {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  word-break: break-word;
+  text-align: center;
+}
+
+/* Contact Form Section */
+.formSection {
+  background: #fff;
+  padding: 80px 20px;
+  text-align: left;
+}
+
+.formSplitWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.formSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+/* Left Side */
+.formIntro {
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1.1s ease forwards;
+}
+.formHeaderPill {
+  background: var(--light-accent);
+  color: var(--primary-dark);
+  width: fit-content;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 6px 16px;
+  margin-bottom: 12px;
+  letter-spacing: normal;
+}
+.formTitle {
+  font-size: 38px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+  text-align: left;
+}
+.formSubtext {
+  color: #555;
+  font-size: 16px;
+  margin: 0 0 32px 0;
+  text-align: left;
+}
+
+/* Social Icons */
+.socialIcons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 32px;
+}
+.socialIcon {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.socialIcon:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 10px rgba(49, 116, 113, 0.2);
+}
+
+/* Right Side */
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1.2s ease forwards;
+}
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.inputField {
+  background: var(--light-accent);
+  border: none;
+  padding: 14px 16px;
+  font-size: 15px;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+.inputField:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Textarea */
+.textareaField {
+  background: var(--light-accent);
+  border: none;
+  padding: 14px 16px;
+  font-size: 15px;
+  min-height: 120px;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+.textareaField:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Send Button */
+.sendButton {
+  background: var(--primary-dark);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  padding: 12px 18px;
+  align-self: flex-start;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(43, 97, 95, 0.2);
+  transition: all 0.3s ease;
+}
+.sendButton:hover {
+  background: var(--secondary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(43, 97, 95, 0.3);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cardsGrid {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .formSplit {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .formIntro {
+    text-align: center;
+  }
+  .formTitle, .formSubtext {
+    text-align: center;
+  }
+  .socialIcons {
+    justify-content: center;
+  }
+  .sendButton {
+    align-self: center;
+  }
+}
+@media (max-width: 600px) {
+  .bannerTitle {
+    font-size: 36px;
+  }
+  .infoHeader {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+  .formSplit {
+    gap: 30px;
+  }
+  .formTitle {
+    font-size: 28px;
+  }
+  .infoCard {
+    padding: 24px 16px;
+    width: 100%;
+    max-width: none;
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .sendButton {
+    width: 100%;
+  }
+}

@@ -1,0 +1,224 @@
+/* === General Layout === */
+
+.container {
+  width: calc(100% - 200px);
+  margin: 20px auto 30px auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+}
+
+.rowTop, .rowBottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+.rowBottom {
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 12px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+
+/* === Labels & Inputs === */
+
+.label {
+  font-size: 1rem;
+  color: #1e1e1e;
+  font-weight: 700;
+  font-family: 'Poppins', 'Open Sans', Arial, sans-serif;
+  margin-bottom: 2px;
+}
+
+.input {
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 1px solid #2B615F;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #ffffff;
+  color: #222;
+  font-weight: 500;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.input:focus {
+  border: 1px solid #389E84;
+}
+
+.inputIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIconWrapper .input {
+  padding-right: 38px;
+}
+
+.icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #2D826B;
+}
+
+
+/* === Guest Box === */
+
+/* === Guest Box (unchanged, still looks like input) === */
+.guestBox {
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 1px solid #2B615F;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #ffffff;
+  color: #222;
+  font-weight: 500;
+  outline: none;
+  transition: border 0.2s;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* === Buttons === */
+
+.buttonWrap {
+  display: flex;
+  flex-direction: column;
+}
+.findRoomBtn {
+  height: 58px;
+  font-size: 1rem;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: #2B615F;
+  color: #fff;
+  border: 1px solid #2B615F;
+  box-shadow: 0 2px 8px rgba(45, 130, 107, 0.10);
+  font-weight: 700;
+  cursor: pointer;
+}
+.findRoomBtn:hover {
+  background: #224b49;
+}
+
+.input {
+  height: 52px;
+}
+
+
+/* === Media Queries === */
+
+@media (max-width: 1100px) {
+  .container {
+    width: calc(100% - 48px);
+  }
+}
+
+@media (max-width: 900px) {
+  .rowTop {
+    grid-template-columns: 1fr;
+  }
+  .rowBottom {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .buttonWrap {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 700px) {
+  .rowBottom {
+    grid-template-columns: 1fr;
+  }
+
+  .promoPill {
+    width: 100%;
+    justify-content: center;
+    margin: 0.5rem 0;
+  }
+
+  .buttonWrap {
+    grid-column: auto;
+  }
+}
+
+.guestPopup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #2B615F;
+  border-radius: 12px;
+  padding: 16px;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-width: 180px; /* smaller since only one counter */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.guestControl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.guestControl label {
+  display: none;
+}
+
+.guestActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guestBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #2B615F;
+  background: #fff;
+  color: #2B615F;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.guestBtn:hover {
+  background: #2B615F;
+  color: #fff;
+}
+
+.guestValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2B615F;
+  min-width: 20px;
+  text-align: center;
+}

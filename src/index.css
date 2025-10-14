@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+  background: #F5F5F5;
+  color: #4F4F4F;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-container {
+  min-height: 100vh;
+  background: #F8F8F8;
+}
+
+/* Route transition shell */
+.route-shell {
+  position: relative;
+}
+
+.route-content {
+  transition: filter 250ms ease, opacity 250ms ease;
+}
+
+.route-content.is-blurring {
+  filter: blur(2px);
+  opacity: 0.85;
+}
+
+.route-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(248, 248, 248, 0);
+  pointer-events: none;
+  transition: background 250ms ease;
+  z-index: 999;
+}
+
+.route-overlay.show {
+  background: rgba(248, 248, 248, 0.35);
+}
