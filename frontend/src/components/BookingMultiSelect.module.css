@@ -1,0 +1,175 @@
+.multiSelectContainer {
+  position: relative;
+  width: 100%;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+  margin-bottom: 18px;
+}
+
+.selectedBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  min-height: 46px;
+  padding: 8px 40px 8px 14px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  font-size: 15px;
+  position: relative;
+}
+
+.selectedBox:focus {
+  outline: none;
+  border-color: #2B615F;
+}
+
+.placeholder {
+  color: #888;
+  font-size: 15px;
+  margin-left: 4px;
+}
+
+.selectedTag {
+  display: flex;
+  align-items: center;
+  background: #E8F5E8;
+  color: #2B615F;
+  font-size: 15px;
+  padding: 2px 9px 2px 9px;
+  border-radius: 6px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  gap: 8px;
+}
+
+.selectedTagWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #E8F5E8;
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.selectedTagText {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+.removeTag {
+  color: #888;
+  margin-left: 7px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 17px;
+  transition: color 0.18s;
+}
+
+.removeTag:hover {
+  color: #F46C6C;
+}
+
+.arrow {
+  margin-left: auto;
+  padding-left: 7px;
+  color: #555;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 35px 0 rgba(40,54,122,.10), 0 1.5px 6px 0 rgba(40,54,122,.08);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 10;
+  min-width: 220px;
+  padding: 10px 5px 10px 0;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 6px 15px;
+  user-select: none;
+  white-space: normal;
+}
+
+.dropdownItem:hover {
+  background: #f1faf7;
+}
+
+.checkbox {
+  margin-right: 10px;
+  accent-color: #2B615F;
+}
+
+.dropdownRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionText {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+.qtyControls,
+.qtyControlsInline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  margin-left: 28px; /* aligns under checkbox text in dropdown */
+  width: fit-content;
+  background: rgba(43, 97, 95, 0.08);
+  border-radius: 999px;
+}
+
+/* Inline controls under selected chips - no left indent */
+.qtyControlsInline {
+  margin-left: 0;
+}
+
+.qtyBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(43, 97, 95, 0.25);
+  background: #fff;
+  color: #2B615F;
+  cursor: pointer;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.qtyBtn:hover {
+  background: rgba(43, 97, 95, 0.06);
+  transform: translateY(-1px);
+}
+
+.qtyValue {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 800;
+  color: #224b49;
+}

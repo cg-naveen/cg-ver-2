@@ -1,0 +1,421 @@
+/* Container */
+.container {
+  min-height: 100vh;
+  margin-top: 120px;
+  background: #f8f8f8;
+}
+
+/* Header Section */
+.header {
+  background: #2B615F;
+  padding: 2rem 0;
+  text-align: center;
+  width: 100%;
+}
+
+.headerTitle {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+/* Main Content */
+.mainContent {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contentWrapper {
+  display: grid;
+  grid-template-columns: 70% 30%; /* 70:30 ratio */
+  gap: 2rem; /* slightly reduced gap */
+  align-items: start;
+}
+
+/* Form Section */
+.formSection {
+  background: white;
+  padding: 2rem;
+  border-radius: 0px;
+  box-shadow: none;
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2B615F;
+  margin: 0 0 2rem 0;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.required {
+  color: red;
+  margin-left: 0.25rem;
+}
+
+.input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2B615F;
+  box-shadow: 0 0 0 2px rgba(43, 97, 95, 0.1);
+}
+
+.inputError {
+  border-color: red;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.3s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #2B615F;
+  box-shadow: 0 0 0 2px rgba(43, 97, 95, 0.1);
+}
+
+.contentWrapper {
+  display: grid;
+  grid-template-columns: 70% 30%; /* 70:30 ratio */
+  gap: 2rem; /* slightly reduced gap */
+  align-items: start;
+}
+
+.submitButton {
+  background: #2B615F;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.submitButton:hover {
+  background: #23524f;
+}
+
+.submitIcon {
+  font-size: 1.2rem;
+}
+
+/* Summary Section */
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.imageContainer {
+  width: 100%;
+}
+
+.hotelImage {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.summaryCard {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 0;
+  box-shadow: none;
+  border-top: 1px solid #ddd
+}
+
+.summaryTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2B615F;
+  margin: 0 0 1rem 0;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap : 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.summaryItem:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.summaryIcon {
+  color: #2B615F;
+  font-size: 1.2rem;
+  margin: 0.3rem;
+  flex-shrink: 0;
+}
+
+.summaryDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.summaryLabel {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.summaryValue {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.additionalServices {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.servicesTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.serviceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.serviceName {
+  color: #666;
+  font-size: 0.9rem;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.servicePrice {
+  color: #333;
+  font-weight: 500;
+  font-size: 0.9rem;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.totalSection {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #2B615F;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.totalLabel {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.totalAmount {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #2B615F;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+}
+
+.costSummarySection {
+  margin-top: 2rem;
+  padding-top: 0.5rem;
+  border-top: 1.5px dashed #ddd;
+}
+
+.costSectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #23434f;
+  margin: 0 0 0.6rem 0;
+  font-family: 'Poppins', 'Nunito Sans', Arial, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.breakdownRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 1rem;
+  color: #4d535a;
+  padding: 5px 0 2px 0;
+  border-bottom: 1px solid #ececec;
+  margin-bottom: 1px;
+  font-family: 'Nunito Sans', Arial, sans-serif;
+}
+
+.breakdownRow > :first-child {
+  flex: 1;
+  margin-right: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.breakdownRow > :last-child {
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+
+.breakdownRow:last-child {
+  border-bottom: none;
+}
+
+.breakdownTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid #2B615F;
+  padding: 1rem 0 0.3rem 0;
+  margin-top: 0.2rem;
+}
+
+/* Add spacing for new Room summary line above Hotel, use for summaryItem injected room */
+.summaryItem span.summaryLabel {
+  min-width: 70px;
+  display: inline-block;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .contentWrapper {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .mainContent {
+    padding: 1.5rem 1rem;
+  }
+  
+  .formSection,
+  .summaryCard {
+    padding: 1.5rem;
+  }
+  
+  .headerTitle {
+    font-size: 1.5rem;
+  }
+  
+  .header {
+    padding: 1.5rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .mainContent {
+    padding: 1rem 0.5rem;
+  }
+  
+  .formSection,
+  .summaryCard {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .hotelImage {
+    height: 200px;
+  }
+  
+  .submitButton {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .headerTitle {
+    font-size: 1.25rem;
+  }
+  
+  .formTitle,
+  .summaryTitle {
+    font-size: 1.2rem;
+  }
+  
+  .totalAmount {
+    font-size: 1.1rem;
+  }
+}
