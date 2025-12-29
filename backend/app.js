@@ -12,7 +12,7 @@ import serviceRoutes from './routes/services.js';
 import bookingRoutes from './routes/booking.js';
 import paymentRoutes from './routes/payments.js';
 import userRoutes from './routes/users.js';
-import adminDashboardRoutes from './routes/adminDashboard.js'
+import adminDashboardRoutes from './routes/adminDashboard.js';
 
 dotenv.config();
 
@@ -20,15 +20,15 @@ const app = express();
 
 // === MIDDLEWARE ===
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
+  origin: process.env.CLIENT_URL,
+  credentials: true, 
 }));
 app.use(express.json());
 app.use(cookieParser());
 
 // === RATE LIMITER FOR AUTH ===
 const authLimiter = rateLimit({
-  windowMs: 60 * 1000,
+  windowMs: 60 * 1000, // 1 minute
   max: 10,
 });
 app.use('/api/auth', authLimiter);
@@ -41,13 +41,11 @@ app.use('/services', serviceRoutes);
 app.use('/bookings', bookingRoutes);
 app.use('/payments', paymentRoutes);
 app.use('/users', userRoutes);
-app.use("/admin", adminDashboardRoutes);
+app.use('/admin', adminDashboardRoutes);
 
+// Test route
 app.get('/', (req, res) => {
-  res.send('server running successfully');
+  res.send('Server running successfully');
 });
 
-// === START SERVER ===
-app.listen(5000, () => {
-  console.log('Server running on http://localhost:5000');
-});
+export default app;

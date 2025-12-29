@@ -10,7 +10,7 @@ import AdminRoutes from './AdminRoutes';
 
 const iconMap = {
   FiHome, FiKey, FiCalendar, FiCreditCard, FiBarChart2, FiUsers, FiBriefcase
-};
+}; 
 
 function AdminLayout() {
   const { navigationItems } = useAdmin();

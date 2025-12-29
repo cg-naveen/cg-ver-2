@@ -1,7 +1,13 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import api from '../api/axios';
+import axios from 'axios';
 
 const AuthContext = createContext();
+
+// Create an axios instance with credentials included
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000', // adjust your backend URL
+  withCredentials: true, // <--- crucial for sending cookies
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -10,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchMe = async () => {
     try {
-      const res = await api.get('/users/me/profile');
+      const res = await api.get('/api/auth/me'); // note endpoint
       setUser(res.data.user);
       setFavourites(res.data.user?.favourites ?? []);
     } catch (err) {
@@ -28,8 +34,8 @@ export const AuthProvider = ({ children }) => {
   const login = async ({ identifier, password }) => {
     const payload = { password };
     identifier.includes('@')
-      ? payload.email = identifier
-      : payload.username = identifier;
+      ? (payload.email = identifier)
+      : (payload.username = identifier);
 
     const res = await api.post('/api/auth/login', payload);
     setUser(res.data.user);
@@ -57,20 +63,20 @@ export const AuthProvider = ({ children }) => {
     if (!user) return;
     const id = roomId.toString();
 
-    favourites.includes(id)
-      ? await removeFavourite(id)
-      : await addFavourite(id);
+    favourites.includes(id) ? await removeFavourite(id) : await addFavourite(id);
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      loading,
-      favourites,
-      login,
-      logout,
-      toggleFavourite
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        favourites,
+        login,
+        logout,
+        toggleFavourite,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -78,4 +84,3 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => useContext(AuthContext);
 export default AuthContext;
-
