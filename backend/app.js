@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import pool from './db.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
@@ -21,31 +20,33 @@ const app = express();
 // === MIDDLEWARE ===
 app.use(cors({
   origin: process.env.CLIENT_URL,
-  credentials: true, 
+  credentials: true,
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
 // === RATE LIMITER FOR AUTH ===
 const authLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
+  windowMs: 60 * 1000,
   max: 10,
 });
+
 app.use('/api/auth', authLimiter);
 
 // === ROUTES ===
 app.use('/api/auth', authRoutes);
-app.use('/hotels', hotelRoutes);
-app.use('/rooms', roomRoutes);
-app.use('/services', serviceRoutes);
-app.use('/bookings', bookingRoutes);
-app.use('/payments', paymentRoutes);
-app.use('/users', userRoutes);
-app.use('/admin', adminDashboardRoutes);
+app.use('/api/hotels', hotelRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/admin', adminDashboardRoutes);
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('Server running successfully');
+// Health check
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
 export default app;

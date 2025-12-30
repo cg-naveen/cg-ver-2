@@ -39,7 +39,7 @@ function User() {
   /* ================= LOAD PROFILE FROM BACKEND ================= */
   useEffect(() => {
     if (!loading && user) {
-      api.get('/users/me/profile')
+      api.get('/api/users/me/profile')
       .then(res => {
         setUserData(res.data.user);
         setEditForm({
@@ -56,7 +56,7 @@ function User() {
   useEffect(() => {
     if (!loading && user) {
       setBookingLoading(true);
-      api.get('/bookings/me')
+      api.get('/api/bookings/me')
         .then(res => {
           // res.data.bookings comes with services array
           setBookingHistory(res.data.bookings || []);
@@ -76,7 +76,7 @@ function User() {
     if (!loading && user && favourites.length) {
       setFavouritesLoading(true);
   
-      api.post('/rooms/by-ids', { room_ids: favourites })
+      api.post('/api/rooms/by-ids', { room_ids: favourites })
         .then(res => {
           setFavouriteRooms(res.data.rooms || []);
         })
@@ -107,7 +107,7 @@ function User() {
 
   const handleSaveProfile = async () => {
     try {
-      const res = await api.put('/users/me/profile', {
+      const res = await api.put('/api/users/me/profile', {
         username: editForm.username,
         phone: editForm.phone,
         address: editForm.address

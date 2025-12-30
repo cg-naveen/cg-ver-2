@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import styles from './RoomDetails.module.css';
 import { FiHeart, FiMapPin, FiCheck } from 'react-icons/fi';
@@ -7,6 +6,7 @@ import RoomCard from '../components/RoomCard';
 import Footer from '../components/Footer';
 import BookingMultiSelect from '../components/BookingMultiSelect';
 import { useAuth } from '../context/AuthContext';
+import api from '../api/axios';
 
 function RoomDetails() {
   const { id } = useParams();
@@ -43,11 +43,11 @@ function RoomDetails() {
     const fetchRoom = async () => {
       setLoadingRoom(true);
       try {
-        const resRoom = await axios.get(`http://localhost:5000/rooms/${id}`);
+        const resRoom = await api.get(`/api/rooms/${id}`);
         if (!cancelled) setRoom(resRoom.data);
         if (!cancelled && resRoom.data?.hotel_id) {
           try {
-            const resHotel = await axios.get(`http://localhost:5000/hotels/${resRoom.data.hotel_id}`);
+            const resHotel = await api.get(`/api/hotels/${resRoom.data.hotel_id}`);
             if (!cancelled) setHotel(resHotel.data);
           } catch (err) {
             console.error('Error fetching hotel data:', err);
@@ -77,7 +77,7 @@ function RoomDetails() {
       if (!room?.hotel_id) return;
       setLoadingSimilar(true);
       try {
-        const res = await axios.get(`http://localhost:5000/rooms/by-hotel/${room.hotel_id}`);
+        const res = await api.get(`/api/rooms/by-hotel/${room.hotel_id}`);
         const filtered = Array.isArray(res.data) ? res.data.filter(r => r.room_id !== room.room_id) : [];
         if (!cancelled) setSimilarRooms(filtered);
       } catch (err) {
@@ -95,7 +95,7 @@ function RoomDetails() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/services');
+        const res = await api.get('/api/services');
         setServices(res.data || []);
       } catch (err) {
         console.error('Error fetching services:', err);
@@ -145,7 +145,7 @@ const handleBookmark = async () => {
   const checkOverlap = async () => {
     if (!checkIn || !checkOut) return false;
     try {
-      const res = await axios.get('http://localhost:5000/bookings/overlap', {
+      const res = await api.get('/api/bookings/overlap', {
         params: { 
           room_id: room.room_id, 
           check_in: toDateOnly(checkIn), 

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FiCalendar, FiHome, FiUsers, FiCreditCard } from 'react-icons/fi';
 import styles from './BookingConfirmation.module.css';
-import axios from 'axios';
 import Footer from '../components/Footer';
+import api from '../api/axios';
 
 function BookingConfirmation() {
   const location = useLocation();
@@ -65,7 +65,7 @@ function BookingConfirmation() {
   console.log("Booking payload:", payload);
 
   //POST request
-    const result = await axios.post('http://localhost:5000/bookings', payload);
+    const result = await api.post('/api/bookings', payload);
     alert(`Booking confirmed! Booking ID: ${result.data.booking_id}`);
     
   } catch (err) {

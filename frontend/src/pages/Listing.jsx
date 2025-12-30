@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import styles from './Listing.module.css';
 import SearchBar from '../components/SearchBar';
 import RoomCard from '../components/RoomCard';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
+import api from '../api/axios';
 
 // === ANIMATIONS ===
 const fadeUp = {
@@ -81,7 +81,7 @@ function Listing() {
     const fetchRooms = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/rooms', {
+        const response = await api.get('/api/rooms', {
           params: {
             state: defaultFilters.state,
             category: defaultFilters.category,
@@ -107,7 +107,7 @@ function Listing() {
   const handleSearch = async (filters) => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/rooms', {
+      const response = await api.get('/api/rooms', {
         params: {
           state: filters.state,
           category: filters.category,

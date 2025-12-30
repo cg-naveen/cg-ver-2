@@ -57,7 +57,7 @@ export function AdminProvider({ children }) {
       if (hotelFilter) params.append("hotelFilter", hotelFilter);
       if (stateFilter) params.append("stateFilter", stateFilter);
   
-      const response = await api.get(`/admin/dashboard?${params.toString()}`);
+      const response = await api.get(`/api/admin/dashboard?${params.toString()}`);
       setDashboard(response.data);
     } catch (err) {
       console.error("Error fetching dashboard:", err);
@@ -76,7 +76,7 @@ export function AdminProvider({ children }) {
   const fetchHotels = async () => {
     try {
       setLoadingHotels(true);
-      const response = await api.get("/hotels");
+      const response = await api.get("/api/hotels");
       setHotels(response.data?.data ?? response.data ?? []);
     } catch (err) {
       console.error("Error fetching hotels:", err);
@@ -93,7 +93,7 @@ export function AdminProvider({ children }) {
   const addHotel = async hotelData => {
     try {
       const payload = { user_id: 1, ...hotelData };
-      const response = await api.post("/hotels", payload);
+      const response = await api.post("/api/hotels", payload);
 
       const newHotel = response.data?.data ?? response.data;
 
@@ -110,7 +110,7 @@ export function AdminProvider({ children }) {
 
   const updateHotel = async (hotel_id, updatedData) => {
     try {
-      const response = await api.put(`/hotels/${hotel_id}`, updatedData);
+      const response = await api.put(`/api/hotels/${hotel_id}`, updatedData);
       const updated = response.data?.data ?? response.data;
 
       if (updated) {
@@ -128,7 +128,7 @@ export function AdminProvider({ children }) {
 
   const removeHotel = async hotel_id => {
     try {
-      await api.delete(`/hotels/${hotel_id}`);
+      await api.delete(`/api/hotels/${hotel_id}`);
 
       setHotels(prev => prev.filter(h => h.hotel_id !== hotel_id));
 
@@ -150,7 +150,7 @@ export function AdminProvider({ children }) {
     try {
       setLoadingRooms(true);
 
-      const response = await api.get(`/rooms/by-hotel/${hotel_id}`);
+      const response = await api.get(`/api/rooms/by-hotel/${hotel_id}`);
       const rooms = response.data?.data ?? response.data ?? [];
 
       setRoomInventory(prev => ({
@@ -202,7 +202,7 @@ export function AdminProvider({ children }) {
         images
       };
 
-      const response = await api.post("/rooms", payload);
+      const response = await api.post("/api/rooms", payload);
       const newRoom = response.data?.data ?? response.data;
 
       await fetchRoomsForHotel(hotel_id);
@@ -238,7 +238,7 @@ export function AdminProvider({ children }) {
         room_features
       };
 
-      const response = await api.put(`/rooms/${room_id}`, payload);
+      const response = await api.put(`/api/rooms/${room_id}`, payload);
       const updated = response.data?.data ?? response.data;
 
       await fetchRoomsForHotel(hotel_id);
@@ -253,7 +253,7 @@ export function AdminProvider({ children }) {
 
   const removeRoom = async (room_id, hotel_id) => {
     try {
-      await api.delete(`/rooms/${room_id}`);
+      await api.delete(`/api/rooms/${room_id}`);
 
       await fetchRoomsForHotel(hotel_id);
       await fetchHotels();
@@ -272,7 +272,7 @@ export function AdminProvider({ children }) {
   const fetchServices = async () => {
     try {
       setLoadingServices(true);
-      const response = await api.get("/services");
+      const response = await api.get("/api/services");
       setServices(response.data?.data ?? response.data ?? []);
     } catch (err) {
       console.error("Error fetching services:", err);
@@ -287,7 +287,7 @@ export function AdminProvider({ children }) {
 
   const addService = async newService => {
     try {
-      const response = await api.post("/services", newService);
+      const response = await api.post("/api/services", newService);
       const created = response.data?.data ?? response.data;
 
       setServices(prev => [...prev, created]);
@@ -300,7 +300,7 @@ export function AdminProvider({ children }) {
 
   const updateService = async (id, updates) => {
     try {
-      const response = await api.put(`/services/${id}`, updates);
+      const response = await api.put(`/api/services/${id}`, updates);
       const updated = response.data?.data ?? response.data;
 
       setServices(prev =>
@@ -316,7 +316,7 @@ export function AdminProvider({ children }) {
 
   const deleteService = async id => {
     try {
-      await api.delete(`/services/${id}`);
+      await api.delete(`/api/services/${id}`);
       setServices(prev => prev.filter(s => s.service_id !== id));
       return { success: true };
     } catch (err) {
@@ -330,7 +330,7 @@ export function AdminProvider({ children }) {
     try {
       setLoadingServiceBookings(true);
   
-      const response = await api.get("/bookings"); // returns { bookings: [...] }
+      const response = await api.get("/api/bookings"); // returns { bookings: [...] }
       const bookings = response.data?.bookings ?? [];
   
       // Flatten services into individual entries
@@ -360,7 +360,7 @@ export function AdminProvider({ children }) {
   const fetchBookings = async () => {
     try {
       setLoadingBookings(true);
-      const response = await api.get("/bookings");
+      const response = await api.get("/api/bookings");
       setBookings(response.data?.bookings ?? []);
     } catch (err) {
       console.error("Error fetching bookings:", err);
@@ -373,7 +373,7 @@ export function AdminProvider({ children }) {
   const getBookingById = async booking_id => {
     if (!booking_id) return null;
     try {
-      const response = await api.get(`/bookings/${booking_id}`);
+      const response = await api.get(`/api/bookings/${booking_id}`);
       return response.data;
     } catch (err) {
       console.error("Error fetching booking by ID:", err);
@@ -383,7 +383,7 @@ export function AdminProvider({ children }) {
   
   const addBooking = async bookingData => {
     try {
-      const response = await api.post("/bookings", bookingData);
+      const response = await api.post("/api/bookings", bookingData);
       const newBookingId = response.data?.booking_id;
       if (newBookingId) {
         await fetchBookings(); // refresh table
@@ -397,7 +397,7 @@ export function AdminProvider({ children }) {
   
   const updateBooking = async (booking_id, updatedData) => {
     try {
-      const response = await api.put(`/bookings/${booking_id}`, updatedData);
+      const response = await api.put(`/api/bookings/${booking_id}`, updatedData);
       await fetchBookings(); // refresh table
       return response.data;
     } catch (err) {
@@ -408,7 +408,7 @@ export function AdminProvider({ children }) {
   
   const checkOverlappingBookings = async (room_id, check_in, check_out) => {
     try {
-      const response = await api.get("/bookings/overlap", {
+      const response = await api.get("/api/bookings/overlap", {
         params: { room_id, check_in, check_out }
       });
       return response.data;
@@ -422,7 +422,7 @@ export function AdminProvider({ children }) {
   const fetchPayments = async () => {
     try {
       setLoadingPayments(true);
-      const response = await api.get("/payments");
+      const response = await api.get("/api/payments");
   
       const normalised =
         Array.isArray(response.data?.data)
@@ -442,7 +442,7 @@ export function AdminProvider({ children }) {
   
   const getPaymentById = async payment_id => {
     try {
-      const response = await api.get(`/payments/${payment_id}`);
+      const response = await api.get(`/api/payments/${payment_id}`);
       return response.data;
     } catch (err) {
       console.error("Error fetching payment by ID:", err);
@@ -451,7 +451,7 @@ export function AdminProvider({ children }) {
   };
   const addPayment = async paymentData => {
     try {
-      const response = await api.post("/payments", paymentData);
+      const response = await api.post("/api/payments", paymentData);
       await fetchPayments();
       return response.data;
     } catch (err) {
@@ -461,7 +461,7 @@ export function AdminProvider({ children }) {
   };
   const updatePayment = async (payment_id, updatedData) => {
     try {
-      const response = await api.put(`/payments/${payment_id}`, updatedData);
+      const response = await api.put(`/api/payments/${payment_id}`, updatedData);
       await fetchPayments();
       return response.data;
     } catch (err) {
@@ -471,7 +471,7 @@ export function AdminProvider({ children }) {
   };
   const deletePayment = async payment_id => {
     try {
-      await api.delete(`/payments/${payment_id}`);
+      await api.delete(`/api/payments/${payment_id}`);
       await fetchPayments();
     } catch (err) {
       console.error("Error deleting payment:", err);
@@ -483,7 +483,7 @@ export function AdminProvider({ children }) {
     try {
       setLoadingRefunds(true);
   
-      const response = await api.get("/payments/refunds");
+      const response = await api.get("/api/payments/refunds");
   
       const normalised =
         Array.isArray(response.data?.data)
@@ -504,7 +504,7 @@ export function AdminProvider({ children }) {
 
   const addRefund = async refundData => {
     try {
-      const response = await api.post("/payments/refunds", refundData);
+      const response = await api.post("/api/payments/refunds", refundData);
       await fetchRefunds();
       return response.data;
     } catch (err) {
@@ -514,7 +514,7 @@ export function AdminProvider({ children }) {
   };
   const updateRefundStatus = async (refund_id, status) => {
     try {
-      const response = await api.put(`/payments/refunds/${refund_id}/status`, { status });
+      const response = await api.put(`/api/payments/refunds/${refund_id}/status`, { status });
       await fetchRefunds();
       return response.data;
     } catch (err) {
@@ -524,7 +524,7 @@ export function AdminProvider({ children }) {
   };
   const deleteRefund = async refund_id => {
     try {
-      await api.delete(`/payments/refunds/${refund_id}`);
+      await api.delete(`/api/payments/refunds/${refund_id}`);
       await fetchRefunds();
     } catch (err) {
       console.error("Error deleting refund:", err);

@@ -6,6 +6,8 @@ import SearchBar from '../components/SearchBar';
 import RoomCard from '../components/RoomCard';
 import Footer from '../components/Footer';
 import {useAuth} from '../context/AuthContext';
+import api from '../api/axios';
+
 function Home() {
   const [featuredrooms, setFeaturedrooms] = useState([]);
   const {favourites, toggleFavourite, user} = useAuth();
@@ -14,10 +16,8 @@ function Home() {
   useEffect(() => {
     const fetchCheapestRooms = async () => {
       try {
-        const response = await fetch('http://localhost:5000/rooms/cheapest');
-        if (!response.ok) throw new Error('Failed to fetch cheapest rooms');
-        const data = await response.json();
-        setFeaturedrooms(data);
+        const response = await api.get('/api/rooms/cheapest');
+        setFeaturedrooms(response.data || []);
       } catch (error) {
         console.error('Error fetching cheapest rooms:', error);
       }

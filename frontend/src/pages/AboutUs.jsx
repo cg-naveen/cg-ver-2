@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import HeaderNav from '../components/HeaderNav';
@@ -8,6 +7,7 @@ import RoomCard from '../components/RoomCard';
 import Footer from '../components/Footer';
 import styles from './AboutUs.module.css';
 import { useAuth } from '../context/AuthContext';
+import api from '../api/axios';
 
 import aboutUsImg1 from '../assets/about us 1.jpg';
 import aboutUsImg2 from '../assets/about us 2.png';
@@ -30,7 +30,7 @@ function AboutUs() {
   useEffect(() => {
     const fetchCheapestRooms = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/rooms/cheapest');
+        const response = await api.get('/api/rooms/cheapest');
         setFeaturedRooms(response.data);
       } catch (error) {
         console.error('Error fetching cheapest rooms:', error);

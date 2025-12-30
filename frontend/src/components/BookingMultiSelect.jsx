@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
-import axios from 'axios'
 import styles from './BookingMultiSelect.module.css'
+import api from '../api/axios'
 
 function BookingMultiSelect({ value = [], onChange }) {
   const [open, setOpen] = useState(false)
@@ -9,7 +9,7 @@ function BookingMultiSelect({ value = [], onChange }) {
 
   // Fetch active services once
   useEffect(() => {
-    axios.get('http://localhost:5000/services')
+    api.get('/api/services')
       .then(res => setServices(res.data))
       .catch(err => console.error('Error fetching services:', err))
   }, [])
