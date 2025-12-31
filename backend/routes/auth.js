@@ -17,11 +17,12 @@ const signToken = (user) => {
 const setTokenCookie = (res, token) => {
   res.cookie('token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // cross-site safe
+    secure: process.env.NODE_ENV === 'production', // HTTPS only
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // cross-origin safe
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 };
+
 
 // === REGISTER ===
 router.post('/register', async (req, res) => {

@@ -16,18 +16,19 @@ import adminDashboardRoutes from './routes/adminDashboard.js';
 dotenv.config();
 
 const app = express();
+
+// === ALLOWED ORIGINS ===
 const allowedOrigins = [
-  'http://localhost:3000', // local dev
-  'https://cg-ver-2.vercel.app' // your deployed frontend
+  'http://localhost:3000',          // local dev
+  'https://cg-ver-2.vercel.app',    // production frontend
 ];
 
 // === MIDDLEWARE ===
 app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true); // allow non-browser requests like Postman
-    if(allowedOrigins.indexOf(origin) === -1){
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / server requests
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS policy does not allow this origin'), false);
     }
     return callback(null, true);
   },
@@ -41,6 +42,7 @@ app.use(cookieParser());
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
+  keyGenerator: (req) => req.ip, 
 });
 
 app.use('/api/auth', authLimiter);
