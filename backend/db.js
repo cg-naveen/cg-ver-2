@@ -14,9 +14,7 @@ if (!global.pgPool) {
     database: process.env.PGDATABASE,
     password: process.env.PGPASSWORD,
     port: process.env.PGPORT,
-    ssl: process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : false,
+    ssl: { rejectUnauthorized: false }
   });
 }
 
