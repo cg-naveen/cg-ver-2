@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import rateLimit from 'express-rate-limit';
+import { rateLimit, ipKeyGenerator } from 'express-rate-limit';
 
 import authRoutes from './routes/auth.js';
 import hotelRoutes from './routes/hotels.js';
@@ -21,7 +21,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',          // local dev
   'https://cg-ver-2.vercel.app',    // production frontend
-];
+].filter(Boolean);
 
 // === MIDDLEWARE ===
 app.use(cors({
@@ -42,7 +42,7 @@ app.use(cookieParser());
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
-  keyGenerator: (req) => req.ip, 
+  keyGenerator: ipKeyGenerator,
 });
 
 app.use('/api/auth', authLimiter);
@@ -58,7 +58,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminDashboardRoutes);
 
 // Health check
-app.get('/api/health', (req, res) => {
+app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
