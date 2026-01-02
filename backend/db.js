@@ -9,11 +9,13 @@ let pool;
 
 if (!global.pgPool) {
   if (process.env.DATABASE_URL) {
-    // Production / Supabase on Vercel
     global.pgPool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
+      ssl: {
+        rejectUnauthorized: false,
+      },
     });
+    
   } else {
     // Local development
     global.pgPool = new Pool({
