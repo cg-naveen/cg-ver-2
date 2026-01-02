@@ -17,6 +17,21 @@ dotenv.config();
 
 const app = express();
 
+/* ===============================
+   TRUST PROXY (REQUIRED ON VERCEL)
+   =============================== */
+app.set('trust proxy', 1);
+
+/* ===============================
+   BODY & COOKIE PARSERS
+   =============================== */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+/* ===============================
+   CORS CONFIG
+   =============================== */
 const allowedOrigins = [
   'http://localhost:3000',
   'https://cg-ver-2.vercel.app',
@@ -24,37 +39,40 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow server-to-server, Postman, curl, Vercel checks
     if (!origin) return callback(null, true);
 
-    // Allow exact match
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    // Allow Vercel preview subdomains
     if (origin.endsWith('.vercel.app')) {
       return callback(null, true);
     }
 
     console.error('Blocked by CORS:', origin);
-    return callback(null, false); // ❗ NEVER throw
+    return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// === RATE LIMITER FOR AUTH ===
+/* ===============================
+   RATE LIMITER (AUTH ONLY)
+   =============================== */
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
   keyGenerator: ipKeyGenerator,
 });
 
 app.use('/api/auth', authLimiter);
 
-// === ROUTES ===
+/* ===============================
+   ROUTES
+   =============================== */
 app.use('/api/auth', authRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/rooms', roomRoutes);
@@ -64,9 +82,19 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminDashboardRoutes);
 
-// Health check
+/* ===============================
+   HEALTH CHECK
+   =============================== */
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+/* ===============================
+   GLOBAL ERROR HANDLER (LAST)
+   =============================== */
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ message: 'Internal server error' });
 });
 
 export default app;

@@ -17,16 +17,16 @@ const signToken = (user) => {
 const setTokenCookie = (res, token) => {
   res.cookie('token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // HTTPS only
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // cross-origin safe
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 };
 
-
 // === REGISTER ===
 router.post('/register', async (req, res) => {
-  const { email, password, username, phone } = req.body;
+  const { email, password, username, phone } = req.body || {};
+
   if (!email || !password || !username || !phone) {
     return res.status(400).json({ message: 'All details are required.' });
   }
@@ -37,6 +37,7 @@ router.post('/register', async (req, res) => {
     }
 
     const hashed = await bcrypt.hash(password, 10);
+
     const result = await pool.query(
       `INSERT INTO users (email, password_hash, username, phone)
        VALUES ($1, $2, $3, $4)
@@ -51,22 +52,26 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ user });
   } catch (err) {
     console.error('Register error:', err);
+
     if (err.code === '23505') {
       return res.status(409).json({ message: 'Email already registered' });
     }
+
     res.status(500).json({ message: 'Server error' });
   }
 });
 
 // === LOGIN ===
 router.post('/login', async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, username, password } = req.body || {};
+
   if ((!email && !username) || !password) {
     return res.status(400).json({ message: 'All credentials required' });
   }
 
   try {
     const identifier = email ? email.toLowerCase() : username;
+
     const result = await pool.query(
       `SELECT user_id, email, password_hash, username, phone, role
        FROM users WHERE email = $1 OR username = $1`,
@@ -85,7 +90,7 @@ router.post('/login', async (req, res) => {
     delete user.password_hash;
     res.json({ user });
   } catch (err) {
-    console.error(err);
+    console.error('Login error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -97,6 +102,7 @@ router.post('/logout', (req, res) => {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   });
+
   res.json({ message: 'Logged out' });
 });
 
@@ -107,16 +113,21 @@ router.get('/me', async (req, res) => {
     if (!token) return res.status(401).json({ message: 'Not authenticated' });
 
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+
     const result = await pool.query(
-      `SELECT user_id, email, username, phone, role FROM users WHERE user_id = $1`,
+      `SELECT user_id, email, username, phone, role
+       FROM users WHERE user_id = $1`,
       [payload.user_id]
     );
 
-    if (!result.rows[0]) return res.status(401).json({ message: 'User not found' });
+    if (!result.rows[0]) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
     res.json({ user: result.rows[0] });
   } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: 'Not Authenticated' });
+    console.error('Auth check error:', err);
+    res.status(401).json({ message: 'Not authenticated' });
   }
 });
 
