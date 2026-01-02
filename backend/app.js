@@ -17,26 +17,33 @@ dotenv.config();
 
 const app = express();
 
-// === ALLOWED ORIGINS ===
 const allowedOrigins = [
-  'http://localhost:3000',          // local dev
-  'https://cg-ver-2.vercel.app',    // production frontend
+  'http://localhost:3000',
+  'https://cg-ver-2.vercel.app',
 ].filter(Boolean);
 
-// === MIDDLEWARE ===
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman / server requests
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS policy does not allow this origin'), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
-}));
+  origin: (origin, callback) => {
+    // Allow server-to-server, Postman, curl, Vercel checks
+    if (!origin) return callback(null, true);
 
-app.use(express.json());
-app.use(cookieParser());
+    // Allow exact match
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow Vercel preview subdomains
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+
+    console.error('Blocked by CORS:', origin);
+    return callback(null, false); // ❗ NEVER throw
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // === RATE LIMITER FOR AUTH ===
 const authLimiter = rateLimit({
@@ -58,7 +65,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminDashboardRoutes);
 
 // Health check
-app.get('/', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
