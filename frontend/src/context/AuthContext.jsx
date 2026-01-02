@@ -31,6 +31,19 @@ export const AuthProvider = ({ children }) => {
     fetchMe();
   }, []);
 
+  const register = async ({ username, phone, email, password }) => {
+    const res = await api.post('/api/auth/register', {
+      username,
+      phone,
+      email,
+      password,
+    });
+  
+    setUser(res.data.user);
+    setFavourites(res.data.user?.favourites ?? []);
+    return res.data;
+  };  
+
   const login = async ({ identifier, password }) => {
     const payload = { password };
     identifier.includes('@')
@@ -71,6 +84,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         loading,
+        register,
         favourites,
         login,
         logout,

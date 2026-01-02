@@ -50,7 +50,7 @@ function Register() {
         password: form.password
       });
 
-      navigate('/signup');
+      navigate('/');
     } catch (err) {
       console.error('Register error (frontend):', err);
       setError(err.response?.data?.message || 'Something went wrong');
