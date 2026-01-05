@@ -16,10 +16,11 @@ const signToken = (user) => {
 // === Helper to set cookie safely ===
 const setTokenCookie = (res, token) => {
   res.cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true,                        // JS on client cannot access it (good)
+    secure: process.env.NODE_ENV === 'production', // must be HTTPS in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // allow cross-origin in production
+    maxAge: 1000 * 60 * 60 * 24 * 7,       // 7 days
+    path: '/',                              // make sure cookie is sent for all routes
   });
 };
 

@@ -63,12 +63,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const addFavourite = async (roomId) => {
-    const res = await api.post('/users/add', { room_id: roomId });
+    const res = await api.post('/api/users/add', { room_id: roomId });
     setFavourites(res.data.favourites);
   };
 
   const removeFavourite = async (roomId) => {
-    const res = await api.post('/users/remove', { room_id: roomId });
+    const res = await api.post('/api/users/remove', { room_id: roomId });
     setFavourites(res.data.favourites);
   };
 

@@ -17,21 +17,12 @@ dotenv.config();
 
 const app = express();
 
-/* ===============================
-   TRUST PROXY (REQUIRED ON VERCEL)
-   =============================== */
 app.set('trust proxy', 1);
 
-/* ===============================
-   BODY & COOKIE PARSERS
-   =============================== */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-/* ===============================
-   CORS CONFIG
-   =============================== */
 const allowedOrigins = [
   'http://localhost:3000',
   'https://cg-ver-2.vercel.app',
@@ -57,9 +48,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-/* ===============================
-   RATE LIMITER (AUTH ONLY)
-   =============================== */
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
@@ -70,9 +58,6 @@ const authLimiter = rateLimit({
 
 app.use('/api/auth', authLimiter);
 
-/* ===============================
-   ROUTES
-   =============================== */
 app.use('/api/auth', authRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/rooms', roomRoutes);
@@ -82,16 +67,10 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminDashboardRoutes);
 
-/* ===============================
-   HEALTH CHECK
-   =============================== */
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-/* ===============================
-   GLOBAL ERROR HANDLER (LAST)
-   =============================== */
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ message: 'Internal server error' });
