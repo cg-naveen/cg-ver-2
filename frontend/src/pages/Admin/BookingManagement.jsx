@@ -15,7 +15,13 @@ export default function BookingManagement() {
     services,
     updateBooking,
     addBooking,
-    getStatusColor
+    getStatusColor,
+    cancelledBookings,
+    loadingCancelledBookings,
+    selectedCancelledBooking,
+    setSelectedCancelledBooking,
+    fetchCancelledBookings,
+    getCancelledBookingById
   } = useAdmin();
 
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -118,6 +124,7 @@ export default function BookingManagement() {
 
   useEffect(() => {
     fetchBookings();
+    fetchCancelledBookings();
   }, []);
 
   useEffect(() => {
@@ -227,7 +234,9 @@ export default function BookingManagement() {
       await addBooking(bookingData);
       alert("Booking created successfully.");
       setShowAdd(false);
-      setAddFormData({});
+      setAddFormData({
+        num_guests: 1
+      });
     } catch (err) {
       console.error(err);
       alert("Error creating booking.");
@@ -235,10 +244,12 @@ export default function BookingManagement() {
   };
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+  
     if (!editFormData.room_id || !editFormData.check_in_date || !editFormData.check_out_date) {
       alert("Room and dates are required.");
       return;
     }
+  
     const bookingData = {
       ...editFormData,
       total_price: editFormTotalPrice,
@@ -246,10 +257,19 @@ export default function BookingManagement() {
         service_id: s.service_id,
         quantity: s.quantity
       }))
-      
-    };    
-    await updateBooking(selectedBooking.booking_id, bookingData);
+    };
+  
+    try {
+      await updateBooking(selectedBooking.booking_id, bookingData);
+      alert("Booking updated successfully.");
+      // ✅ CLOSE PANEL AFTER SUCCESS
+      closeAllPanels();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update booking.");
+    }
   };
+  
 
   // Open edit panel
   const openEdit = booking => {
@@ -305,6 +325,14 @@ export default function BookingManagement() {
     setShowAdd(false);
   };
 
+  const closeAllPanels = () => {
+    setShowAdd(false);
+    setShowEdit(false);
+    setShowView(false);
+    setSelectedBooking(null);
+  };
+  
+
   return (
     <div className={styles.bookingsContent}>
       {/* HEADER */}
@@ -333,9 +361,9 @@ export default function BookingManagement() {
         </div>
         <select className={styles.filterSelect} onChange={e => setStatusFilter(e.target.value)}>
           <option>All Status</option>
-          <option>Pending Payment</option>
-          <option>Complete</option>
-          <option>Cancelled</option>
+          <option>pending payment</option>
+          <option>completed</option>
+          <option>cancelled</option>
         </select>
       </div>
 
@@ -398,38 +426,89 @@ export default function BookingManagement() {
         </table>
       </div>
 
-      {/* VIEW PANEL */}
-      {selectedBooking && showView && (
-        <div className={styles.settingsCard}>
-          <h3>Booking Details — {selectedBooking.booking_id}</h3>
-          <div className={styles.detailsBox}>
-            <p><strong>Guest:</strong> {selectedBooking.first_name} {selectedBooking.last_name}</p>
-            <p><strong>Email:</strong> {selectedBooking.email || '-'}</p>
-            <p><strong>Phone:</strong> {selectedBooking.phone_number}</p>
-            <p><strong>Age:</strong> {selectedBooking.age || '-'}</p>
-            <p><strong>Hotel:</strong> {selectedBooking.hotel_name}</p>
-            <p><strong>Room:</strong> {selectedBooking.room_name}</p>
-            <p><strong>Check-in:</strong> {selectedBooking.check_in_date?.split('T')[0]}</p>
-            <p><strong>Check-out:</strong> {selectedBooking.check_out_date?.split('T')[0]}</p>
-            <p><strong>Guests:</strong> {selectedBooking.num_guests}</p>
-            <p><strong>Services:</strong>{' '}
-              {(selectedBooking.services || []).map(s => {
-                const name = s.service_name || s.name || s.label || s;
-                const qty = s.quantity || s.service_quantity || 1;
-                return qty > 1 ? `${name} (x${qty})` : name;
-              }).join(', ')}
-            </p>
-            <p><strong>Total (RM):</strong> {selectedBooking.total_price}</p>
-            <p><strong>Message:</strong> {selectedBooking.message || '-'}</p>
-            <p><strong>Status:</strong> {selectedBooking.booking_status}</p>
-          </div>
-        </div>
+            {/* VIEW PANEL */}
+{selectedBooking && showView && (
+  <div className={styles.settingsCard}>
+    <div className={styles.panelHeader}>
+  <h3>Booking Details — {selectedBooking.booking_id}</h3>
+  <button
+    className={styles.closeButton}
+    onClick={closeAllPanels}
+  >
+    ✕
+  </button>
+</div>
+
+    <div className={styles.detailsBox}>
+      <p><strong>Guest:</strong> {selectedBooking.first_name} {selectedBooking.last_name}</p>
+
+      {selectedBooking.email && (
+        <p><strong>Email:</strong> {selectedBooking.email}</p>
       )}
+
+      {selectedBooking.phone_number && (
+        <p><strong>Phone:</strong> {selectedBooking.phone_number}</p>
+      )}
+
+      {selectedBooking.age && (
+        <p><strong>Age:</strong> {selectedBooking.age}</p>
+      )}
+
+      <p><strong>Hotel:</strong> {selectedBooking.hotel_name}</p>
+      <p><strong>Room:</strong> {selectedBooking.room_name}</p>
+
+      <p><strong>Check-in:</strong> {selectedBooking.check_in_date?.split('T')[0]}</p>
+      <p><strong>Check-out:</strong> {selectedBooking.check_out_date?.split('T')[0]}</p>
+
+      <p><strong>Guests:</strong> {selectedBooking.num_guests}</p>
+
+      {selectedBooking.cancelled_at && (
+        <p><strong>Cancelled At:</strong> {selectedBooking.cancelled_at.split('T')[0]}</p>
+      )}
+
+      {(selectedBooking.services?.length > 0) && (
+        <p>
+          <strong>Services:</strong>{' '}
+          {selectedBooking.services.map(s => {
+            const name = s.service_name || s.name || s.label || s;
+            const qty = s.quantity || s.service_quantity || 1;
+            return qty > 1 ? `${name} (x${qty})` : name;
+          }).join(', ')}
+        </p>
+      )}
+
+      <p><strong>Total (RM):</strong> {selectedBooking.total_price}</p>
+
+      {selectedBooking.message && (
+        <p><strong>Message:</strong> {selectedBooking.message}</p>
+      )}
+
+      <p><strong>Status:</strong> {selectedBooking.booking_status}</p>
+
+      {selectedBooking.cancellation_reason && (
+        <p><strong>Cancellation Reason:</strong> {selectedBooking.cancellation_reason}</p>
+      )}
+
+      {selectedBooking.cancellation_note && (
+        <p><strong>Cancellation Note:</strong> {selectedBooking.cancellation_note}</p>
+      )}
+    </div>
+  </div>
+)}
 
       {/* EDIT PANEL */}
       {selectedBooking && showEdit && (
         <div className={styles.settingsCard}>
-          <h3>Edit Booking — {selectedBooking.booking_id}</h3>
+          <div className={styles.panelHeader}>
+  <h3>Edit Booking — {selectedBooking.booking_id}</h3>
+  <button
+    type="button"
+    className={styles.closeButton}
+    onClick={closeAllPanels}
+  >
+    ✕
+  </button>
+</div>
           <form className={styles.settingsForm} onSubmit={handleEditSubmit}>
             <div className={styles.inputGroup}>
               <label>Room</label>
@@ -453,7 +532,7 @@ export default function BookingManagement() {
                 <input
                   type="text"
                   name="first_name"
-                  value={editFormData.first_name || ""}
+                  value={editFormData.first_name || "" + " "}
                   onChange={handleEditChange}
                 />
               </div>
@@ -562,9 +641,9 @@ export default function BookingManagement() {
                 value={editFormData.booking_status || ""}
                 onChange={handleEditChange}
               >
-                <option>Pending Payment</option>
-                <option>Complete</option>
-                <option>Cancelled</option>
+                <option>pending payment</option>
+                <option>completed</option>
+                <option>cancelled</option>
               </select>
             </div>
 
@@ -576,7 +655,16 @@ export default function BookingManagement() {
       {/* ADD PANEL */}
       {showAdd && (
         <div className={styles.settingsCard}>
-          <h3>Create Manual Booking</h3>
+          <div className={styles.panelHeader}>
+  <h3>Create Manual Booking</h3>
+  <button
+    type="button"
+    className={styles.closeButton}
+    onClick={closeAllPanels}
+  >
+    ✕
+  </button>
+</div>
           <form className={styles.settingsForm} onSubmit={handleAddSubmit}>
             <div className={styles.inputGroup}>
               <label>Room</label>
@@ -601,6 +689,7 @@ export default function BookingManagement() {
                 <input
                   type="text"
                   name="first_name"
+                  required
                   value={addFormData.first_name || ""}
                   onChange={handleAddChange}
                 />
@@ -654,6 +743,7 @@ export default function BookingManagement() {
                 <input
                   type="text"
                   name="phone_number"
+                  required
                   value={addFormData.phone_number || ""}
                   onChange={handleAddChange}
                 />

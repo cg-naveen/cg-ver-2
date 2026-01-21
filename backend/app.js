@@ -12,6 +12,8 @@ import bookingRoutes from './routes/booking.js';
 import paymentRoutes from './routes/payments.js';
 import userRoutes from './routes/users.js';
 import adminDashboardRoutes from './routes/adminDashboard.js';
+import hotelProviderRoutes from "./routes/provider/hotel.js";
+import serviceProviderRoutes from "./routes/provider/service.js";
 
 dotenv.config();
 
@@ -66,6 +68,8 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminDashboardRoutes);
+app.use('/api/provider/hotel', hotelProviderRoutes);
+app.use('/api/provider/service', serviceProviderRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

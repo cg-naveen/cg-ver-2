@@ -30,7 +30,11 @@ export function AdminProvider({ children }) {
   const [bookings, setBookings] = useState([]);
   const [loadingBookings, setLoadingBookings] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
-
+  // Cancelled bookings (Superadmin)
+  const [cancelledBookings, setCancelledBookings] = useState([]);
+  const [loadingCancelledBookings, setLoadingCancelledBookings] = useState(false);
+  const [selectedCancelledBooking, setSelectedCancelledBooking] = useState(null);
+  
   const [payments, setPayments] = useState([]);
   const [loadingPayments, setLoadingPayments] = useState(false);
 
@@ -418,6 +422,32 @@ export function AdminProvider({ children }) {
     }
   };
 
+  const fetchCancelledBookings = async () => {
+    try {
+      setLoadingCancelledBookings(true);
+      const response = await api.get("/api/bookings/cancelled");
+      setCancelledBookings(response.data?.bookings ?? []);
+    } catch (err) {
+      console.error("Error fetching cancelled bookings:", err);
+      setCancelledBookings([]);
+    } finally {
+      setLoadingCancelledBookings(false);
+    }
+  };
+
+  const getCancelledBookingById = async booking_id => {
+    if (!booking_id) return null;
+
+    try {
+      const response = await api.get(`/api/bookings/cancelled/${booking_id}`);
+      return response.data?.booking ?? null;
+    } catch (err) {
+      console.error("Error fetching cancelled booking details:", err);
+      return null;
+    }
+  };
+
+
   //payments-------------------------------------
   const fetchPayments = async () => {
     try {
@@ -587,6 +617,12 @@ export function AdminProvider({ children }) {
         addBooking,
         updateBooking,
         checkOverlappingBookings,
+        cancelledBookings,
+        loadingCancelledBookings,
+        selectedCancelledBooking,
+        setSelectedCancelledBooking,
+        fetchCancelledBookings,
+        getCancelledBookingById,
 
         payments,
         loadingPayments,

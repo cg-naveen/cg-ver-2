@@ -75,7 +75,7 @@ function SearchBar({ onSearch }) {
           >
             <option value="">State</option>
             <option value="Selangor">Selangor</option>
-            <option value="Penang">Penang</option>
+            <option value="Pulau Pinang">Pulau Pinang</option>
             <option value="Johor">Johor</option>
             <option value="Wilayah Persekutuan">Wilayah Persekutuan</option>
             <option value="Negeri Sembilan">Negeri Sembilan</option>

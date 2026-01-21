@@ -30,8 +30,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-
-
 // GET single payment
 router.get("/payments/:id", async (req, res) => {
     const { id } = req.params;
@@ -69,7 +67,6 @@ router.post("/payments", async (req, res) => {
     }
 });
 
-
 // UPDATE a payment
 router.put("/payments/:id", async (req, res) => {
     const { id } = req.params;
@@ -100,7 +97,6 @@ router.put("/payments/:id", async (req, res) => {
     }
 });
 
-
 // DELETE a payment
 router.delete("/payments/:id", async (req, res) => {
     const { id } = req.params;
@@ -123,96 +119,100 @@ router.delete("/payments/:id", async (req, res) => {
 });
 
 
-
-// ==============================
 // REFUNDS CRUD
-// ==============================
 
-// GET all refunds
+// GET all refund requests
 router.get("/refunds", async (req, res) => {
     try {
-        const result = await pool.query(
-            `SELECT refund_id, booking_id, refund_amount, reason, status,
-                    created_at, updated_at
-             FROM refunds
-             ORDER BY created_at DESC`
-        );
-        res.json(result.rows);
+      const result = await pool.query(
+        `SELECT
+            b.booking_id,
+            b.first_name,
+            b.last_name,
+            b.refund_status,
+            b.refund_amount,
+            b.refunded_at,
+            b.total_price,
+            b.cancelled_at
+         FROM bookings b
+         WHERE b.booking_status = 'cancelled'
+           AND b.refund_status IN ('pending', 'approved', 'rejected')
+         ORDER BY b.cancelled_at DESC`
+      );
+  
+      res.json(result.rows);
     } catch (err) {
-        console.error("Error fetching refunds:", err);
-        res.status(500).json({ message: "Error fetching refunds" });
+      console.error("Error fetching refunds:", err);
+      res.status(500).json({ message: "Error fetching refunds" });
     }
-});
-
-
-// CREATE a refund request
+  });
+  
+  
+    // ==============================
+// CREATE refund request (by booking)
+// ==============================
 router.post("/refunds", async (req, res) => {
-    const { booking_id, refund_amount, reason } = req.body;
-
+    const { booking_id } = req.body;
+  
     try {
-        const result = await pool.query(
-            `INSERT INTO refunds (booking_id, refund_amount, reason, status)
-             VALUES ($1, $2, $3, 'pending')
-             RETURNING *`,
-            [booking_id, refund_amount, reason]
-        );
-
-        res.status(201).json(result.rows[0]);
+      const result = await pool.query(
+        `UPDATE bookings
+         SET refund_status = 'pending',
+             refund_amount = total_price,
+             updated_at = NOW()
+         WHERE booking_id = $1
+           AND booking_status = 'cancelled'
+           AND refund_status IS NULL
+         RETURNING booking_id, refund_status, refund_amount`,
+        [booking_id]
+      );
+  
+      if (result.rows.length === 0) {
+        return res.status(400).json({
+          message: "Refund not applicable for this booking"
+        });
+      }
+  
+      res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error("Error creating refund:", err);
-        res.status(500).json({ message: "Error creating refund" });
+      console.error("Error creating refund:", err);
+      res.status(500).json({ message: "Error creating refund request" });
     }
-});
-
-
-// UPDATE refund status (approve or reject)
-router.put("/refunds/:id/status", async (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body; // expected 'approved' or 'rejected'
-
+  });
+  
+  
+// UPDATE refund status
+router.put("/refunds/:booking_id/status", async (req, res) => {
+    const { booking_id } = req.params;
+    const { status } = req.body; // approved | rejected
+  
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid refund status" });
+    }
+  
     try {
-        const result = await pool.query(
-            `UPDATE refunds
-             SET status = $1,
-                 updated_at = NOW()
-             WHERE refund_id = $2
-             RETURNING *`,
-            [status, id]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: "Refund not found" });
-        }
-
-        res.json(result.rows[0]);
+      const result = await pool.query(
+        `UPDATE bookings
+         SET refund_status = $1,
+             refunded_at = CASE 
+               WHEN $1 = 'approved' THEN NOW()
+               ELSE NULL
+             END,
+             updated_at = NOW()
+         WHERE booking_id = $2 AND refund_status = 'pending'
+         RETURNING booking_id, refund_status, refunded_at`,
+        [status, booking_id]
+      );
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Booking not found" });
+      }
+  
+      res.json(result.rows[0]);
     } catch (err) {
-        console.error("Error updating refund status:", err);
-        res.status(500).json({ message: "Error updating refund status" });
+      console.error("Error updating refund status:", err);
+      res.status(500).json({ message: "Error updating refund status" });
     }
-});
-
-
-// DELETE a refund (if needed)
-router.delete("/refunds/:id", async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const result = await pool.query(
-            `DELETE FROM refunds WHERE refund_id = $1 RETURNING *`,
-            [id]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: "Refund not found" });
-        }
-
-        res.json({ message: "Refund deleted successfully" });
-    } catch (err) {
-        console.error("Error deleting refund:", err);
-        res.status(500).json({ message: "Error deleting refund" });
-    }
-});
-
-
-
+  });
+  
 export default router;

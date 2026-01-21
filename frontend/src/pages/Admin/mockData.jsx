@@ -1,8 +1,15 @@
 import { FiCalendar, FiClipboard, FiTrendingUp } from 'react-icons/fi';
 
 // Utility functions
-export const formatCurrency = (value) =>
-  `RM ${value.toLocaleString(undefined, { minimumFractionDigits: 0 })}`;
+export const formatCurrency = (value) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return "RM 0";
+  }
+
+  return `RM ${Number(value).toLocaleString(undefined, {
+    minimumFractionDigits: 0
+  })}`;
+};
 
 export const getStatusColor = (status) => {
   switch (status?.toLowerCase()) {

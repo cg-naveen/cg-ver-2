@@ -31,7 +31,6 @@ export default function ServiceManagement() {
         price: "",
         max_quantity: 1,
         is_active: true,
-        provider: ""
     });
 
     const handleInput = (e) => {
@@ -46,7 +45,6 @@ export default function ServiceManagement() {
             price: "",
             max_quantity: 1,
             is_active: true,
-            provider: partnerAccounts.find(p => p.type === "Service")?.partner || ""
         });
         setShowAddModal(true);
     };
@@ -58,8 +56,7 @@ export default function ServiceManagement() {
             description: service.description || "",
             price: service.price,
             max_quantity: service.max_quantity || 1,
-            is_active: service.is_active,
-            provider: service.provider || ""
+            is_active: service.is_active
         });
         setShowEditModal(true);
     };
@@ -81,7 +78,6 @@ export default function ServiceManagement() {
             price: form.price,
             max_quantity: Number(form.max_quantity),
             is_active: form.is_active,
-            provider: form.provider
         };
 
         const result = await addService(payload);
@@ -125,19 +121,6 @@ export default function ServiceManagement() {
                     />
                 </div>
 
-                <select
-                    className={styles.filterSelect}
-                    onChange={(e) => setSearch(e.target.value)}
-                >
-                    <option value="">All Providers</option>
-                    {[...new Set(services.map(s => s.provider))]
-                        .filter(Boolean)
-                        .map((provider, index) => (
-                            <option key={`${provider}-${index}`} value={provider}>
-                                {provider}
-                            </option>
-                        ))}
-                </select>
             </div>
 
             <div className={styles.tableContainer}>
@@ -145,7 +128,6 @@ export default function ServiceManagement() {
                     <thead>
                         <tr>
                             <th>Service</th>
-                            <th>Provider</th>
                             <th>Price</th>
                             <th>Max Qty</th>
                             <th>Status</th>
@@ -167,7 +149,6 @@ export default function ServiceManagement() {
                             filteredServices.map((service) => (
                                 <tr key={service.service_id}>
                                     <td>{service.service_name}</td>
-                                    <td>{service.provider}</td>
                                     <td>{formatCurrency(service.price)}</td>
                                     <td>{service.max_quantity}</td>
                                     <td>
@@ -209,7 +190,6 @@ export default function ServiceManagement() {
                         <p>ID: {selectedService.service_id}</p>
                         <p><strong>Service:</strong> {selectedService.service_name}</p>
                         <p><strong>Description:</strong> {selectedService.description || "-"}</p>
-                        <p><strong>Provider:</strong> {selectedService.provider}</p>
                         <p><strong>Max Quantity:</strong> {selectedService.max_quantity}</p>
                         <p><strong>Status:</strong> {selectedService.is_active ? "Active" : "Inactive"}</p>
                         <button className={styles.actionButton} onClick={() => setShowViewModal(false)}>Close</button>
@@ -281,20 +261,7 @@ export default function ServiceManagement() {
                             </div>
 
                             <div className={styles.inputGroup}>
-                                <label>Provider</label>
-                                <select
-                                    name="provider"
-                                    value={form.provider}
-                                    onChange={handleInput}
-                                >
-                                    {partnerAccounts
-                                        .filter((p) => p.type === "Service")
-                                        .map((partner) => (
-                                            <option key={partner.partner_id} value={partner.partner}>
-                                                {partner.partner}
-                                            </option>
-                                        ))}
-                                </select>
+                                
                             </div>
 
                             <div className={styles.modalActions}>

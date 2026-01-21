@@ -8,7 +8,6 @@ import Footer from '../components/Footer';
 
 function User() {
   const { user, loading, favourites } = useAuth();
-
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -26,6 +25,12 @@ function User() {
     phone: '',
     address: ''
   });
+
+
+if (user.role !== 'user') {
+  return <Navigate to="/" replace />;
+}
+
 
   /* ================= SETTINGS ================= */
   const [settings, setSettings] = useState({
@@ -97,7 +102,7 @@ function User() {
   if (loading || !userData) {
     return <div className={styles.userPage}>Loading profile...</div>;
   }
-  
+
 
   /* ================= HANDLERS ================= */
   const handleEditFormChange = (e) => {
@@ -277,7 +282,9 @@ function User() {
     ) : bookingHistory.length ? (
       <div className={styles.bookingsList}>
         {bookingHistory.map(booking => (
-          <BookingCard key={booking.booking_id} booking={{
+          <BookingCard
+          key={booking.booking_id}
+          booking={{
             booking_id: booking.booking_id,
             hotel_name: booking.hotel_name,
             room_name: booking.room_name,
@@ -286,7 +293,19 @@ function User() {
             price: Number(booking.total_price),
             status: booking.booking_status,
             services: booking.services
-          }} />
+          }}
+          onCancelSuccess={(id) => {
+            setBookingHistory(prev =>
+              prev.map(b =>
+                b.booking_id === id
+                  ? { ...b, booking_status: 'cancelled' }
+                  : b
+              )
+            );
+          }}
+          
+        />
+        
         ))}
       </div>
     ) : (

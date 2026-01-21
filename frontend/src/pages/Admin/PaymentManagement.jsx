@@ -66,8 +66,8 @@ export default function PaymentManagement() {
         >
           <option value="">Payment Method</option>
           <option>Credit Card</option>
-          <option>FPX</option>
-          <option>Bank Transfer</option>
+          <option>Online Banking</option>
+          <option>Debit Card</option>
         </select>
       </div>
 
@@ -112,72 +112,79 @@ export default function PaymentManagement() {
   </table>
 </div>
       {/* REFUND PROCESS */}
-      <div className={styles.settingsCard} style={{ width: "100%" }}>
-        <h3>Refund Processes</h3>
+<div className={styles.settingsCard} style={{ width: "100%" }}>
+  <h3>Refund Processes</h3>
 
-        <div className={styles.tableContainer}>
-          <table className={styles.roomsTable}>
-            <thead>
-              <tr>
-                <th>Booking</th>
-                <th>Amount</th>
-                <th>Reason</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+  <div className={styles.tableContainer}>
+    <table className={styles.roomsTable}>
+      <thead>
+        <tr>
+          <th>Booking</th>
+          <th>Guest</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-            <tbody>
-              {refunds.length === 0 ? (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
-                    No refunds found
-                  </td>
-                </tr>
-              ) : (
-                refunds.map(refund => (
-                  <tr key={refund.refund_id}>
-                    <td>{refund.booking_id}</td>
-                    <td>{formatCurrency(refund.refund_amount)}</td>
-                    <td>{refund.reason}</td>
-                    <td>
-                      <span
-                        className={styles.statusBadge}
-                        style={{ backgroundColor: getStatusColor(refund.status) }}
-                      >
-                        {refund.status}
-                      </span>
-                    </td>
-                    <td>
-                      <div className={styles.actionButtonsRow}>
-                        <button
-                          className={styles.actionButton}
-                          onClick={() =>
-                            updateRefundStatus(refund.refund_id, "approved")
-                          }
-                        >
-                          <FiCheckCircle size={14} />
-                        </button>
+      <tbody>
+        {refunds.length === 0 ? (
+          <tr>
+            <td colSpan="5" style={{ textAlign: "center" }}>
+              No refund requests
+            </td>
+          </tr>
+        ) : (
+          refunds.map(booking => (
+            <tr key={booking.booking_id}>
+              <td>{booking.booking_id}</td>
+              <td>
+                {booking.first_name} {booking.last_name}
+              </td>
+              <td>{formatCurrency(booking.refund_amount)}</td>
+              <td>
+                <span
+                  className={styles.statusBadge}
+                  style={{
+                    backgroundColor: getStatusColor(booking.refund_status)
+                  }}
+                >
+                  {booking.refund_status}
+                </span>
+              </td>
+              <td>
+                {booking.refund_status === "pending" && (
+                  <div className={styles.actionButtonsRow}>
+                    <button
+                      className={styles.actionButton}
+                      onClick={() =>
+                        updateRefundStatus(booking.booking_id, "approved")
+                      }
+                    >
+                      <FiCheckCircle size={14} />
+                    </button>
 
-                        <button
-                          className={styles.actionButton}
-                          onClick={() =>
-                            updateRefundStatus(refund.refund_id, "rejected")
-                          }
-                        >
-                          <FiAlertCircle size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                    <button
+                      className={styles.actionButton}
+                      onClick={() =>
+                        updateRefundStatus(booking.booking_id, "rejected")
+                      }
+                    >
+                      <FiAlertCircle size={14} />
+                    </button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))
+        )}
+      </tbody>
+    </table>
+  </div>
 
-        <p>Approval or rejection triggers confirmation pop up.</p>
-      </div>
+  <p>Approving a refund will record the refund date automatically.</p>
+</div>
+
 
       {/* INVOICE + EXPORT */}
       <div className={styles.twoColumnRow}>

@@ -33,8 +33,8 @@ router.get("/", async (req, res) => {
    CREATE a new service
 ========================================= */
 router.post("/", async (req, res) => {
-  const { user_id, service_name, description, price, max_quantity } = req.body;
-
+  const {
+    service_provider_id,service_name,description,price,max_quantity,is_active} = req.body;
   if (!service_name || !price) {
     return res.status(400).json({ message: "service_name and price are required" });
   }
@@ -42,18 +42,19 @@ router.post("/", async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO services 
-         (user_id, service_name, description, price, max_quantity)
-       VALUES ($1, $2, $3, $4, $5)
+       (service_provider_id, service_name, description, price, max_quantity, is_active)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
       [
-        user_id || null,
+        service_provider_id,
         service_name,
         description || null,
         price,
-        max_quantity || 1 // default 1
+        max_quantity || 1,
+        is_active ?? true
       ]
     );
-
+    
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error("Error creating service:", err);

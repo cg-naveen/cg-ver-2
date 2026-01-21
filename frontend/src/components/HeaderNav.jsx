@@ -10,6 +10,28 @@ function HeaderNav() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const getUserHomePath = (user) => {
+    if (!user) return '/login';
+  
+    switch (user.role) {
+      case 'superadmin':
+        return '/admin';
+  
+      case 'hotel_provider':
+        return `/provider/hotel/${user.hotel_provider_id}`;
+  
+      case 'service_provider':
+        return `/provider/service/${user.service_provider_id}`;
+  
+      case 'user':
+        return '/user';
+  
+      default:
+        return '/';
+    }
+  };
+  
+
   function handleLogout() {
     logout();
     navigate('/');
@@ -129,9 +151,7 @@ function HeaderNav() {
 
           {user && (
             <>
-              <Link
-                to="/user"
-                className={styles.mobileUserBox}
+              <Link to={getUserHomePath(user)} className={styles.mobileUserBox}
                 onClick={closeMobileMenu}
               >
                 <FiUser size={20} />
@@ -220,7 +240,8 @@ function HeaderNav() {
           {/* If logged in, show user + logout button */}
           {user && (
             <>
-              <Link to="/user" className={styles.userDisplay}>
+                <Link to={getUserHomePath(user)} className={styles.userDisplay}>
+
                 <FiUser size={28} />
                 <span className={styles.username}>{user.username}</span>
               </Link>

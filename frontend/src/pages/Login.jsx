@@ -28,8 +28,23 @@ function Login() {
     setLoading(true);
 
     try {
-      await login({ identifier: form.identifier, password: form.password });
-      navigate('/');
+      const data = await login({
+        identifier: form.identifier,
+        password: form.password
+      });
+
+      const {role, hotel_provider_id, service_provider_id} = data.user;
+      if (role === 'superadmin'){
+        navigate('/admin', {replace: true});
+      } else if (role === 'hotel_provider'){
+        navigate(`/provider/hotel/${hotel_provider_id}`, {replace: true});
+      } else if (role === 'service_provider'){
+        navigate(`/provider/service/${service_provider_id}`, {replace:true});
+      } else {
+        navigate('/', {replace: true});
+      }
+      console.log('LOGIN RESPONSE USER:', data.user);
+
     } catch (err) {
       console.error('Login error (frontend):', err);
       setError(err.response?.data?.message || 'Invalid credentials');

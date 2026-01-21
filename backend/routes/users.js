@@ -44,8 +44,34 @@ router.get("/me/profile", requireAuth, async (req, res) => {
   }
 });
 
-/**
- * =========================
+
+//check if username and email ardy exist
+router.get('/check', async (req,res) => {
+  const {email, username} = req.query;
+  if (!email && !username){
+    return res.status(400).json({message: 'Email or username is required'});
+  }
+  try {
+    let query;
+    let value;
+
+    if(email){
+      query = `SELECT 1 FROM users WHERE email = $1 LIMIT 1`;
+      value = email.toLowerCase();
+    } else {
+      query = `SELECT 1 FROM users WHERE username = $1 LIMIT 1`;
+      value = username;
+    }
+    const result = await pool.query(query, [value]);
+
+    res.json({exists: result.rowCount > 0});
+  } catch (err) {
+    console.error('Error checking user availability:', err);
+    res.status(500).json({message: 'Server error'});
+  }
+});
+
+/*=========================
  * ADMIN: GET user by ID
  * =========================
  */
@@ -188,8 +214,8 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-/**
- * =========================
+
+/*=========================
  * USER FAVOURITES
  * =========================
  */
